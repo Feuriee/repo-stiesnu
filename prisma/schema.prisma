@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  DOSEN
+  MAHASISWA
+  GUEST
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  password   String
+  role       Role     @default(GUEST)
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  publications Publication[]
+}
+
+model Author {
+  id          String   @id @default(cuid())
+  name        String
+  affiliation String?
+  createdAt   DateTime @default(now())
+
+  publications Publication[]
+}
+
+model Publication {
+  id           String   @id @default(cuid())
+  title        String
+  abstract     String
+  year         Int
+  programStudy String
+  type         String   // e.g. Skripsi, Jurnal, Artikel ilmiah, Prosiding, Laporan penelitian, Buku ajar dosen
+  pdfUrl       String?
+  isApproved   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  authorId     String
+  author       Author   @relation(fields: [authorId], references: [id])
+  
+  uploaderId   String
+  uploader     User     @relation(fields: [uploaderId], references: [id])
+
+  keywords     PublicationKeyword[]
+}
+
+model Keyword {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  
+  publications PublicationKeyword[]
+}
+
+model PublicationKeyword {
+  publicationId String
+  keywordId     String
+  
+  publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  keyword       Keyword     @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+  
+  @@id([publicationId, keywordId])
+}
