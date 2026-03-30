@@ -1,0 +1,1 @@
+import{d as s,o as t,c as o,m as r,r as l}from"./index-zsq_q-dV.js";const c=s({__name:"Label",props:{className:{default:""}},setup(a){return(e,n)=>(t(),o("label",r({class:["text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900",a.className]},e.$attrs),[l(e.$slots,"default")],16))}});export{c as _};

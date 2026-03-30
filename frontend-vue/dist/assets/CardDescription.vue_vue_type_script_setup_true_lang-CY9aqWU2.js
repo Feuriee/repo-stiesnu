@@ -1,0 +1,1 @@
+import{d as a,o as t,c as r,y as o,r as n}from"./index-zsq_q-dV.js";const m=a({__name:"CardDescription",props:{className:{default:""}},setup(e){return(s,c)=>(t(),r("p",{class:o(["text-sm text-gray-500",e.className])},[n(s.$slots,"default")],2))}});export{m as _};

@@ -1,0 +1,1 @@
+import{d as a,o as s,c as n,y as o}from"./index-zsq_q-dV.js";const r=a({__name:"Skeleton",props:{className:{default:""}},setup(e){return(l,t)=>(s(),n("div",{class:o(["animate-pulse rounded-md bg-gray-200/60",e.className])},null,2))}});export{r as _};
