@@ -69,7 +69,7 @@
 
         <template v-if="loading">
           <Card v-for="i in 5" :key="i" class="mb-4">
-            <CardContent class="p-6 space-y-4">
+            <CardContent class="p-6 !pt-6 space-y-4">
               <Skeleton class="h-6 w-3/4" />
               <div class="flex gap-4">
                 <Skeleton class="h-4 w-32" />
@@ -82,7 +82,7 @@
         
         <template v-else-if="data.publications.length > 0">
           <Card v-for="pub in data.publications" :key="pub.id" class="transition-all hover:bg-gray-50/50 mb-4 cursor-pointer" @click="router.push(`/repository/${pub.id}`)">
-            <CardContent class="p-6">
+            <CardContent class="p-6 !pt-6">
               <div class="flex flex-col gap-2">
                 <div class="flex gap-2 items-center mb-1">
                   <Badge variant="secondary" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200">{{ pub.type }}</Badge>
@@ -194,7 +194,14 @@ const fetchData = async () => {
 
   try {
     const response = await api.get(`/publications?${params.toString()}`)
-    if (response.data.publications) {
+    if (Array.isArray(response.data)) {
+      data.value = {
+        publications: response.data,
+        total: response.data.length,
+        page: currentPage.value,
+        totalPages: 1
+      }
+    } else if (response.data.publications) {
       data.value = response.data
     }
   } catch (e) {

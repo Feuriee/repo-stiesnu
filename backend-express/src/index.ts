@@ -23,6 +23,7 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import pubRoutes from './routes/publication';
 import { upload } from './controllers/publication';
+import { getStats } from './controllers/stats';
 
 // Test route
 app.get('/api/health', (req: Request, res: Response) => {
@@ -36,6 +37,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/publications', pubRoutes);
+
+app.get('/api/stats', getStats);
 
 // Dedicated standalone PDF upload
 app.post('/api/upload', upload.single('file'), (req: Request, res: Response): void => {

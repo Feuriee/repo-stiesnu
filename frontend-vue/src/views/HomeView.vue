@@ -34,7 +34,7 @@
                   placeholder="Cari judul penelitian, abstrak, atau penulis..."
                 />
               </div>
-              <Button type="submit" size="lg" class="h-14 px-8 rounded-xl bg-white text-emerald-700 hover:bg-white/90 font-bold shadow-lg transition-all hover:scale-105">
+              <Button type="submit" size="lg" class="h-14 px-8 rounded-xl bg-emerald-600 text-white hover:bg-emerald-500 font-bold shadow-lg transition-all hover:scale-105">
                 Eksplorasi
               </Button>
             </form>
@@ -56,12 +56,12 @@
     </section>
 
     <!-- Stats Section with Hover Effects -->
-    <section class="w-full py-16 bg-gray-50/30 relative z-20 -mt-8">
+    <section class="w-full py-12 bg-gray-50/30 relative z-20">
       <div class="container px-4 md:px-6 mx-auto">
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div v-for="(stat, i) in displayStats" :key="i" class="h-full transform transition-all hover:-translate-y-1">
             <Card class="border border-gray-200/50 shadow-sm bg-white/50 backdrop-blur-sm hover:shadow-md transition-all h-full">
-              <CardContent class="p-6 flex items-center gap-4">
+              <CardContent class="p-6 !pt-6 flex items-center gap-4">
                 <div :class="`p-4 rounded-2xl ${stat.bg}`">
                   <component :is="stat.icon" :class="`h-8 w-8 ${stat.color}`" />
                 </div>

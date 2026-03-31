@@ -50,22 +50,23 @@
       </div>
     </div>
 
-    <!-- Modal Konfirmasi Logout -->
-    <div v-if="logoutAlertOpen" class="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-lg w-full max-w-sm overflow-hidden animate-fade-in-up">
-        <div class="p-6">
-          <h2 class="text-lg font-bold text-gray-900">Konfirmasi Keluar</h2>
-          <p class="text-gray-500 mt-2">
-            Apakah Anda yakin ingin keluar dari akun Anda?
-          </p>
-        </div>
-        <div class="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3 border-t border-gray-100">
-          <Button variant="outline" @click="logoutAlertOpen = false">Batal</Button>
-          <Button class="bg-red-600 hover:bg-red-700 text-white" @click="handleLogoutConfirm">Ya, Keluar</Button>
-        </div>
+  </header>
+
+  <!-- Modal Konfirmasi Logout -->
+  <div v-if="logoutAlertOpen" class="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm overflow-hidden animate-fade-in-up">
+      <div class="p-6">
+        <h2 class="text-lg font-bold text-gray-900">Konfirmasi Keluar</h2>
+        <p class="text-gray-500 mt-2">
+          Apakah Anda yakin ingin keluar dari akun Anda?
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3 border-t border-gray-100">
+        <Button variant="outline" @click="logoutAlertOpen = false">Batal</Button>
+        <Button class="bg-red-600 hover:bg-red-700 text-white" @click="handleLogoutConfirm">Ya, Keluar</Button>
       </div>
     </div>
-  </header>
+  </div>
 </template>
 
 <script setup lang="ts">

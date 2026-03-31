@@ -43,6 +43,7 @@ model Publication {
   programStudy String
   type         String   // e.g. Skripsi, Jurnal, Artikel ilmiah, Prosiding, Laporan penelitian, Buku ajar dosen
   pdfUrl       String?
+  scholarUrl   String?
   isApproved   Boolean  @default(false)
   createdAt    DateTime @default(now())
 

@@ -112,7 +112,7 @@ export const getPublicationById = async (req: Request, res: Response): Promise<v
 // Create publication (requires login)
 export const createPublication = async (req: Request, res: Response): Promise<void> => {
    try {
-     const { title, abstract, year, programStudy, type, authorName, authorAffiliation, keywords } = req.body;
+     const { title, abstract, year, programStudy, type, scholarUrl, authorName, authorAffiliation, keywords } = req.body;
      const user = (req as any).user;
      
      if (!user) {
@@ -156,7 +156,7 @@ export const createPublication = async (req: Request, res: Response): Promise<vo
      const publication = await prisma.publication.create({
        data: {
           title, abstract, year: Number(year), programStudy, type,
-          pdfUrl, 
+          pdfUrl, scholarUrl,
           isApproved: user.role === 'ADMIN', // Auto approve if admin
           author: { connect: { id: authorRecord.id } },
           uploader: { connect: { id: user.id } },
@@ -194,7 +194,7 @@ export const approvePublication = async (req: Request, res: Response): Promise<v
 export const updatePublication = async (req: Request, res: Response): Promise<void> => {
    try {
      const { id } = req.params;
-     const { title, abstract, year, programStudy, type, authorName, authorAffiliation, keywords } = req.body;
+     const { title, abstract, year, programStudy, type, scholarUrl, authorName, authorAffiliation, keywords } = req.body;
      const user = (req as any).user;
      
      const existingPub = await prisma.publication.findUnique({ where: { id: String(id) } });
@@ -264,6 +264,7 @@ export const updatePublication = async (req: Request, res: Response): Promise<vo
           ...(programStudy && { programStudy }),
           ...(type && { type }),
           pdfUrl,
+          ...(scholarUrl && { scholarUrl }),
           ...(authorRecord && { author: { connect: { id: authorRecord.id } } }),
           ...(keywordConnections && { keywords: keywordConnections })
        },

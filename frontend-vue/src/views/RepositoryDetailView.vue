@@ -8,7 +8,7 @@
 
     <template v-if="loading">
       <Card class="border-t-4 border-t-emerald-600 shadow-md overflow-hidden">
-        <CardContent class="p-6 md:p-10 space-y-4">
+        <CardContent class="p-6 md:p-10 !pt-6 md:!pt-10 space-y-4">
           <Skeleton class="h-8 w-3/4 mb-4" />
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Skeleton class="h-10 w-full" />
@@ -21,7 +21,7 @@
 
     <template v-else-if="pub">
       <Card class="border-t-4 border-t-emerald-600 shadow-md overflow-hidden">
-        <CardContent class="p-6 md:p-10">
+        <CardContent class="p-6 md:p-10 !pt-6 md:!pt-10">
           <div class="flex flex-wrap gap-2 mb-4">
             <Badge class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-emerald-200">{{ pub.type }}</Badge>
             <Badge v-if="pub.programStudy" variant="outline">{{ pub.programStudy }}</Badge>
@@ -88,13 +88,17 @@
                 <p class="text-xs text-gray-500">PDF Document</p>
               </div>
             </div>
-            
-            <Button v-if="pub.pdfUrl" class="w-full md:w-auto shadow-sm" @click="downloadFile(pub.pdfUrl)">
-              <PhDownload class="mr-2 h-4 w-4" /> Unduh Dokumen FullText
-            </Button>
-            <Button v-else disabled variant="outline" class="w-full md:w-auto">
-              <PhFileText class="mr-2 h-4 w-4" /> Dokumen Tidak Tersedia
-            </Button>
+            <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+              <Button v-if="pub.pdfUrl" class="w-full sm:w-auto shadow-sm" @click="downloadFile(pub.pdfUrl)">
+                <PhDownload class="mr-2 h-4 w-4" /> Unduh Dokumen FullText
+              </Button>
+              <Button v-else disabled variant="outline" class="w-full sm:w-auto">
+                <PhFileText class="mr-2 h-4 w-4" /> Dokumen Tidak Tersedia
+              </Button>
+              <Button v-if="pub.scholarUrl" variant="outline" class="w-full sm:w-auto border-emerald-500/30 text-emerald-700 bg-emerald-50 hover:bg-emerald-100" @click="openScholar(pub.scholarUrl)">
+                <PhArrowUpRight class="mr-2 h-4 w-4" /> Google Scholar
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -112,7 +116,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { PhArrowLeft, PhUser, PhCalendar, PhGraduationCap, PhFileText, PhDownload } from '@phosphor-icons/vue'
+import { PhArrowLeft, PhUser, PhCalendar, PhGraduationCap, PhFileText, PhDownload, PhArrowUpRight } from '@phosphor-icons/vue'
 import api from '../api/axios'
 
 import Card from '../components/ui/Card.vue'
@@ -145,5 +149,9 @@ const downloadFile = (url: string) => {
   const backendUrl = 'http://localhost:8000'
   const fullUrl = url.startsWith('/') ? `${backendUrl}${url}` : url
   window.open(fullUrl, '_blank', 'noopener,noreferrer')
+}
+
+const openScholar = (url: string) => {
+  window.open(url, '_blank', 'noopener,noreferrer')
 }
 </script>

@@ -72,6 +72,11 @@
             </div>
 
             <div class="grid gap-2">
+              <Label for="scholarUrl">Link Google Scholar <span class="text-gray-400 text-sm font-normal">(Opsional)</span></Label>
+              <Input id="scholarUrl" name="scholarUrl" v-model="formData.scholarUrl" placeholder="https://scholar.google.com/..." />
+            </div>
+
+            <div class="grid gap-2">
               <Label for="abstract">Abstrak <span class="text-red-500">*</span></Label>
               <Textarea id="abstract" name="abstract" v-model="formData.abstract" required rows="6" placeholder="Tuliskan abstrak karya ilmiah..." />
             </div>
@@ -151,6 +156,7 @@ const formData = ref({
   programStudy: "",
   type: "",
   keywords: "",
+  scholarUrl: "",
 })
 
 const handleFileChange = (e: Event) => {
