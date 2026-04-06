@@ -63,6 +63,12 @@ const router = createRouter({
           name: 'dashboard-publications-edit',
           component: () => import('../views/dashboard/EditPublicationView.vue'),
           meta: { requiresAdmin: true }
+        },
+        {
+          path: 'profile',
+          name: 'dashboard-profile',
+          component: () => import('../views/dashboard/ProfileView.vue'),
+          meta: { requiresAuth: true }
         }
       ]
     }

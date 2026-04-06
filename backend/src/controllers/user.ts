@@ -58,18 +58,38 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
    }
 };
 
-// Update user details or approval status (Admin)
+// Update user details or approval status (Admin & Self)
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
    try {
      const { id } = req.params;
      const { name, email, role, isApproved, password } = req.body;
+     const userReq = (req as any).user;
+
+     // Authorization Check: Must be the user themselves or an ADMIN
+     if (userReq.id !== id && userReq.role !== 'ADMIN') {
+        res.status(403).json({ error: 'Forbidden: You can only edit your own profile' });
+        return;
+     }
      
      const updateData: any = {};
      if (name !== undefined) updateData.name = String(name);
-     if (email !== undefined) updateData.email = String(email);
-     if (role !== undefined) updateData.role = String(role);
-     if (isApproved !== undefined) updateData.isApproved = isApproved;
      
+     // Email updating (ensure uniqueness if changed)
+     if (email !== undefined) {
+        const checkEmail = await prisma.user.findUnique({ where: { email: String(email) } });
+        if (checkEmail && checkEmail.id !== id) {
+           res.status(400).json({ error: 'Email is already taken by another user' });
+           return;
+        }
+        updateData.email = String(email);
+     }
+
+     // Only ADMIN can update role and approval status
+     if (userReq.role === 'ADMIN') {
+        if (role !== undefined) updateData.role = String(role);
+        if (isApproved !== undefined) updateData.isApproved = isApproved;
+     }
+
      if (password) {
         updateData.password = await bcrypt.hash(String(password), 10);
      }

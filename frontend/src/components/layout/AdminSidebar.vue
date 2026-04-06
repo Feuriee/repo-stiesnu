@@ -29,7 +29,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
-import { PhLayout, PhFileText, PhUsers, PhUploadSimple } from '@phosphor-icons/vue'
+import { PhLayout, PhFileText, PhUsers, PhUploadSimple, PhUserGear } from '@phosphor-icons/vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -51,6 +51,11 @@ const sidebarNavItems = computed(() => {
       title: "Upload Karya",
       href: "/dashboard/publications/new",
       icon: PhUploadSimple,
+    },
+    {
+      title: "Profil Saya",
+      href: "/dashboard/profile",
+      icon: PhUserGear,
     },
   ]
 

@@ -77,14 +77,21 @@
                       Tertunda
                     </Badge>
                   </td>
-                  <td class="p-4 align-middle text-right">
+                  <td class="p-4 align-middle text-right space-x-2">
                     <Button 
                       v-if="user.role !== 'ADMIN'"
                       :variant="user.isApproved ? 'outline' : 'default'" 
                       size="sm"
                       @click="requestApprovalToggle(user.id, user.isApproved)"
                     >
-                      {{ user.isApproved ? "Cabut Akses" : "Setujui (ACC)" }}
+                      {{ user.isApproved ? "Cabut Akses" : "Setujui" }}
+                    </Button>
+                    <Button 
+                       variant="outline" 
+                       size="sm" 
+                       @click="openEditModal(user)"
+                    >
+                      Edit 
                     </Button>
                   </td>
                 </tr>
@@ -118,6 +125,33 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Edit User -->
+    <div v-if="editUserOpen && editingUser" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden animate-fade-in-up">
+        <form @submit.prevent="submitEditUser">
+          <div class="p-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Edit Pengguna: {{ editingUser.email }}</h2>
+            
+            <div class="space-y-4">
+              <div class="space-y-2">
+                 <Label class="text-sm font-medium">Nama Lengkap</Label>
+                 <Input v-model="editForm.name" required class="w-full" />
+              </div>
+              <div class="space-y-2">
+                 <Label class="text-sm font-medium">Atur Ulang Sandi (Opsional)</Label>
+                 <Input v-model="editForm.password" type="password" placeholder="Kosongkan jika tak ingin diganti" class="w-full" />
+              </div>
+            </div>
+            
+          </div>
+          <div class="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3 border-t border-gray-100">
+            <Button type="button" variant="outline" @click="editUserOpen = false">Batal</Button>
+            <Button type="submit" variant="default" :loading="actionLoading">Simpan Perubahan</Button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +165,8 @@ import { useToast } from '../../composables/useToast'
 import Skeleton from '../../components/ui/Skeleton.vue'
 import Badge from '../../components/ui/Badge.vue'
 import Button from '../../components/ui/Button.vue'
+import Input from '../../components/ui/Input.vue'
+import Label from '../../components/ui/Label.vue'
 
 const authStore = useAuthStore()
 const toast = useToast()
@@ -142,6 +178,11 @@ const error = ref<string | null>(null)
 const alertOpen = ref(false)
 const actionLoading = ref(false)
 const targetUser = ref<{ id: string; status: boolean; actionName: string } | null>(null)
+
+// Edit User State
+const editUserOpen = ref(false)
+const editingUser = ref<any>(null)
+const editForm = ref({ name: '', password: '' })
 
 onMounted(async () => {
   if (authStore.user?.role !== 'ADMIN') return
@@ -198,6 +239,35 @@ const updateRole = async (userId: string, newRole: string) => {
     // Re-fetch to revert local state visually 
     const response = await api.get('/users')
     users.value = response.data
+  }
+}
+
+const openEditModal = (user: any) => {
+  editingUser.value = user
+  editForm.value = { name: user.name, password: '' }
+  editUserOpen.value = true
+}
+
+const submitEditUser = async () => {
+  if (!editingUser.value) return
+  actionLoading.value = true
+  
+  try {
+    const payload: any = { name: editForm.value.name }
+    if (editForm.value.password) payload.password = editForm.value.password
+    
+    await api.put(`/users/${editingUser.value.id}`, payload)
+    
+    // Update local users array
+    users.value = users.value.map(u => 
+      u.id === editingUser.value.id ? { ...u, name: editForm.value.name } : u
+    )
+    toast.success("Profil pengguna dan kata sandi berhasil diperbarui!")
+    editUserOpen.value = false
+  } catch (err: any) {
+    toast.error(err.response?.data?.error || "Gagal memperbarui pengguna")
+  } finally {
+    actionLoading.value = false
   }
 }
 </script>
