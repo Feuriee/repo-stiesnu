@@ -190,18 +190,32 @@ const fetchData = async () => {
   if (route.query.search) params.append('search', route.query.search.toString())
   if (route.query.type && route.query.type !== 'all') params.append('type', route.query.type.toString())
   if (route.query.year && route.query.year !== 'all') params.append('year', route.query.year.toString())
-  params.append('page', currentPage.value.toString())
-
+  // Tidak perlu mengirim page ke backend jika backend mengembalikan semua data
+  // params.append('page', currentPage.value.toString())
+  
   try {
     const response = await api.get(`/publications?${params.toString()}`)
     if (Array.isArray(response.data)) {
+      const itemsPerPage = 7
+      const totalItems = response.data.length
+      const totalPages = Math.ceil(totalItems / itemsPerPage) || 1
+      
+      // Pastikan halaman tidak lebih besar dari total halaman
+      let validPage = currentPage.value
+      if (validPage > totalPages) validPage = totalPages
+      if (validPage < 1) validPage = 1
+      
+      const startIdx = (validPage - 1) * itemsPerPage
+      const endIdx = startIdx + itemsPerPage
+      
       data.value = {
-        publications: response.data,
-        total: response.data.length,
-        page: currentPage.value,
-        totalPages: 1
+        publications: response.data.slice(startIdx, endIdx),
+        total: totalItems,
+        page: validPage,
+        totalPages: totalPages
       }
     } else if (response.data.publications) {
+       // if backend handles pagination, we still fallback to its data
       data.value = response.data
     }
   } catch (e) {

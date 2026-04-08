@@ -1,22 +1,22 @@
 <template>
   <header class="sticky top-0 z-50 w-full border-b border-gray-200/40 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 shadow-sm transition-all duration-300">
     <div class="container flex h-16 items-center justify-between mx-auto px-4 md:px-8">
-      <div class="flex items-center gap-4">
-        <router-link to="/" class="flex items-center space-x-2 group">
-          <div class="bg-emerald-600/10 p-2 rounded-lg group-hover:bg-emerald-600/20 transition-colors">
-            <PhBookOpen :size="20" weight="bold" class="text-emerald-600" />
+      <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+        <router-link to="/" class="flex items-center space-x-2 sm:space-x-3 group min-w-0">
+          <div class="bg-emerald-600/10 p-1.5 sm:p-2 rounded-lg group-hover:bg-emerald-600/20 transition-colors shrink-0">
+            <img src="/logo.png" alt="Logo STIESNU" class="h-6 sm:h-7 w-auto object-contain shrink-0" />
           </div>
-          <span class="font-bold inline-block text-emerald-700 text-xl tracking-tight hidden sm:inline-block">
-            Reposituri STIESNU
+          <span class="font-bold text-emerald-700 text-sm sm:text-xl tracking-tight truncate">
+            Repositori STIESNU <span class="hidden lg:inline">Bengkulu</span>
           </span>
         </router-link>
-        <nav class="hidden md:flex items-center gap-6 ml-6 text-sm font-medium">
+        <nav class="hidden md:flex items-center gap-6 ml-6 text-sm font-medium shrink-0">
           <router-link to="/" class="transition-colors hover:text-gray-900/80 text-gray-600">Beranda</router-link>
           <router-link to="/repository" class="transition-colors hover:text-gray-900/80 text-gray-600">Koleksi</router-link>
         </nav>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 sm:gap-4 shrink-0 pl-2">
         <!-- Optional Theme Toggle here -->
         
         <div v-if="authStore.isAuthenticated && authStore.user" class="flex items-center gap-3">
@@ -74,7 +74,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import Button from '../ui/Button.vue'
-import { PhBookOpen, PhLayout, PhSignOut } from '@phosphor-icons/vue'
+import { PhLayout, PhSignOut } from '@phosphor-icons/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

@@ -7,7 +7,7 @@ async function main() {
   console.log('Seeding data...');
 
   // Hash password for all dummy accounts (password: "password123")
-  const password = await bcrypt.hash('password123', 10);
+  const password = await bcrypt.hash(' ', 10);
 
   // 1. Create Admin
   const admin = await prisma.user.upsert({
@@ -22,7 +22,7 @@ async function main() {
     },
   });
 
-  // 2. Create Dosen
+  // 2. Create Dose
   const dosen = await prisma.user.upsert({
     where: { email: 'dosen@stiesnu.ac.id' },
     update: {},
