@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Vue Router Page Transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Customizing NProgress Loading Bar to match project's Emerald Theme */
+#nprogress .bar {
+  background: #059669 !important; /* emerald-600 */
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #059669, 0 0 5px #059669 !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #059669 !important;
+  border-left-color: #059669 !important;
+}

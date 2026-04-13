@@ -1,4 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// NProgress Configuration
+NProgress.configure({ showSpinner: false, speed: 400, minimum: 0.15 })
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,9 +81,45 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (_to, _from, next) => {
-  // We'll implement auth guards based on pinia state later
-  next();
+import { useAuthStore } from '../stores/auth'
+
+router.beforeEach(async (to, _from, next) => {
+  NProgress.start()
+
+  const authStore = useAuthStore()
+
+  // Make sure we have established the initial session state before routing
+  if (!authStore.isSessionChecked) {
+    await authStore.checkSession()
+  }
+
+  // Check if route requires authentication
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+
+  if (requiresAuth && !authStore.isAuthenticated) {
+    // Not logged in, redirect to login
+    next({ name: 'login' })
+    return
+  }
+
+  if (requiresAdmin && authStore.user?.role !== 'ADMIN') {
+    // Not admin, redirect to generic dashboard root
+    next({ name: 'dashboard-home' })
+    return
+  }
+
+  // If user is already authenticated, don't let them hit login/register again
+  if ((to.name === 'login' || to.name === 'register') && authStore.isAuthenticated) {
+    next({ name: 'dashboard-home' })
+    return
+  }
+
+  next()
+})
+
+router.afterEach(() => {
+  NProgress.done()
 })
 
 export default router

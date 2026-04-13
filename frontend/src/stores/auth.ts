@@ -14,6 +14,7 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
+  isSessionChecked: boolean
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -22,20 +23,29 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false,
     isLoading: false,
     error: null,
+    isSessionChecked: false,
   }),
 
   actions: {
     async checkSession() {
+      if (this.isSessionChecked) return;
       this.isLoading = true;
       try {
         const response = await api.get('/auth/session')
-        this.user = response.data
+        this.user = {
+          id: response.data.user.id,
+          name: response.data.user.name,
+          email: response.data.user.email,
+          role: response.data.user.role,
+          isApproved: response.data.user.isApproved
+        }
         this.isAuthenticated = true
       } catch (error: any) {
         this.user = null
         this.isAuthenticated = false
       } finally {
         this.isLoading = false
+        this.isSessionChecked = true
       }
     },
 

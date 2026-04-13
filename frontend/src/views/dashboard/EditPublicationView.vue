@@ -239,26 +239,20 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    let pdfUrl = null
+    const submitData = new FormData()
 
-    // Upload file if exists
+    // 1. Append text fields
+    Object.entries(formData.value).forEach(([key, value]) => {
+      submitData.append(key, value)
+    })
+
+    // 2. Append PDF file under the 'file' key (matching backend upload.single('file') for PUT)
     if (file.value) {
-      const fileData = new FormData()
-      fileData.append("file", file.value)
-
-      const uploadRes = await api.post("/upload", fileData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-      pdfUrl = uploadRes.data.fileUrl || uploadRes.data.url
+      submitData.append("file", file.value)
     }
 
-    // Update Publication Record
-    const payload = {
-      ...formData.value,
-      ...(pdfUrl ? { pdfUrl } : {})
-    }
-
-    await api.put(`/publications/${pubId}`, payload)
+    // 3. Submit directly to /publications/:id
+    await api.put(`/publications/${pubId}`, submitData)
 
     toast.success("Karya ilmiah berhasil diubah.")
     router.push("/dashboard/publications")

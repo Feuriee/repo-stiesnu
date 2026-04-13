@@ -188,25 +188,20 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    let pdfUrl = null
+    const submitData = new FormData()
 
-    // Upload file if exists
+    // 1. Append text fields
+    Object.entries(formData.value).forEach(([key, value]) => {
+      submitData.append(key, value)
+    })
+
+    // 2. Append PDF file under the 'pdf' key (matching backend upload.single('pdf'))
     if (file.value) {
-      const fileData = new FormData()
-      fileData.append("file", file.value)
-
-      // Assuming Express handles multiform upload on /api/upload
-      const uploadRes = await api.post("/upload", fileData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-      pdfUrl = uploadRes.data.fileUrl || uploadRes.data.url
+      submitData.append("pdf", file.value)
     }
 
-    // Create Publication Record
-    await api.post("/publications", {
-      ...formData.value,
-      pdfUrl,
-    })
+    // 3. Submit directly to /publications
+    await api.post("/publications", submitData)
 
     toast.success("Karya ilmiah berhasil diunggah.")
     router.push("/dashboard/publications")

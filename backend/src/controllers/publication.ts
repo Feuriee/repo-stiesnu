@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import * as multerImport from 'multer';
 const multer: any = (multerImport as any).default || multerImport;
+import fs from 'fs';
 import path from 'path';
 
 const prisma = new PrismaClient();
@@ -9,7 +10,11 @@ const prisma = new PrismaClient();
 // Configure multer for PDF uploads
 const storage = multer.diskStorage({
   destination: (req: Request, file: any, cb: any) => {
-    cb(null, 'public/uploads/');
+    const dir = 'public/uploads/';
+    if (!fs.existsSync(dir)) {
+       fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
   },
   filename: (req: Request, file: any, cb: any) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
