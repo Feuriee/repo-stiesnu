@@ -134,8 +134,8 @@ onMounted(async () => {
   try {
     const id = route.params.id
     const response = await api.get(`/publications/${id}`)
-    if (response.data.publication) {
-      pub.value = response.data.publication
+    if (response.data) {
+      pub.value = response.data.publication || response.data
     }
   } catch (e) {
     console.error("Failed to fetch publication:", e)

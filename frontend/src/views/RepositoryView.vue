@@ -124,22 +124,24 @@
         </template>
 
         <!-- Pagination -->
-        <div v-if="data.totalPages > 1" class="flex items-center justify-center space-x-2 mt-8">
+        <div v-if="data.totalPages > 1" class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 mt-8">
           <Button 
             variant="outline" size="sm" 
             @click="goToPage(currentPage - 1)"
             :disabled="currentPage <= 1"
+            class="flex-shrink-0"
           >
             <PhCaretLeft class="h-4 w-4 mr-1" />
-            Sebelumnnya
+            Sebelumnya
           </Button>
-          <div class="text-sm">
+          <div class="text-sm whitespace-nowrap px-2">
             Hal {{ currentPage }} dari {{ data.totalPages }}
           </div>
           <Button 
             variant="outline" size="sm" 
             @click="goToPage(currentPage + 1)"
             :disabled="currentPage >= data.totalPages"
+            class="flex-shrink-0"
           >
             Selanjutnya
             <PhCaretRight class="h-4 w-4 ml-1" />

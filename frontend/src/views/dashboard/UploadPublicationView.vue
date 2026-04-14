@@ -81,12 +81,12 @@
               <Textarea id="abstract" name="abstract" v-model="formData.abstract" required rows="6" placeholder="Tuliskan abstrak karya ilmiah..." />
             </div>
 
-            <div class="grid gap-2 p-4 border rounded-md bg-gray-50/50">
+            <div class="grid gap-2 p-4 border rounded-md bg-gray-50/50 overflow-hidden">
               <Label for="file" class="text-base flex items-center gap-2">
-                <PhUploadSimple class="h-4 w-4" /> Unggah File PDF
+                <PhUploadSimple class="h-4 w-4 flex-shrink-0" /> Unggah File PDF
               </Label>
               <p class="text-xs text-gray-500 mb-2">Opsional, tinggalkan kosong jika dokumen fisik.</p>
-              <input id="file" type="file" accept="application/pdf" @change="handleFileChange" class="bg-white border border-gray-300 rounded-md p-2 text-sm cursor-pointer" />
+              <input id="file" type="file" accept="application/pdf" @change="handleFileChange" class="bg-white border border-gray-300 rounded-md p-2 text-sm cursor-pointer w-full text-ellipsis overflow-hidden file:mr-2 file:-ml-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
             </div>
           </div>
 

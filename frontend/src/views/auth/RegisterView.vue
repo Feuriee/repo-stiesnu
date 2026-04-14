@@ -2,7 +2,7 @@
   <div class="container flex items-center justify-center min-h-[80vh] py-12 px-4 sm:px-6 lg:px-8 mx-auto">
     <Card class="w-full max-w-md shadow-lg border-t-4 border-t-emerald-500">
       <CardHeader class="space-y-1 flex flex-col items-center text-center">
-        <PhBookOpen :size="40" weight="fill" class="text-emerald-500 mb-2" />
+        <img src="/logo.png" alt="Logo STIESNU" class="h-16 w-auto mb-3" />
         <CardTitle class="text-2xl font-bold tracking-tight text-emerald-700">
           Daftar Akun Baru
         </CardTitle>
@@ -54,7 +54,7 @@
           </Button>
         </form>
       </CardContent>
-      <CardFooter class="flex flex-col space-y-4 border-t px-6 py-4">
+      <CardFooter class="flex flex-col space-y-4 px-6 py-4">
         <div class="text-sm text-center text-gray-500 w-full">
           Sudah punya akun?
           <router-link

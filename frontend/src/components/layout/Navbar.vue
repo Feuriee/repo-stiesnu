@@ -7,7 +7,9 @@
             <img src="/logo.png" alt="Logo STIESNU" class="h-6 sm:h-7 w-auto object-contain shrink-0" />
           </div>
           <span class="font-bold text-emerald-700 text-sm sm:text-xl tracking-tight truncate">
-            Repositori STIESNU <span class="hidden lg:inline">Bengkulu</span>
+            <span class="sm:hidden">Repositori</span>
+            <span class="hidden sm:inline">Repositori STIESNU</span>
+            <span class="hidden lg:inline"> Bengkulu</span>
           </span>
         </router-link>
         <nav class="hidden md:flex items-center gap-6 ml-6 text-sm font-medium shrink-0">
@@ -23,10 +25,11 @@
           <Button 
             variant="outline" 
             size="sm" 
+            class="px-2 sm:px-3"
             @click="router.push('/dashboard')"
           >
-            <PhLayout :size="16" class="mr-2" />
-            Dashboard
+            <PhLayout :size="16" class="sm:mr-2" />
+            <span class="hidden sm:inline">Dashboard</span>
           </Button>
           
           <div class="hidden md:flex flex-col items-end text-xs">

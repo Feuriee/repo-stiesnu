@@ -15,8 +15,91 @@
       {{ error }}
     </div>
 
-    <div v-else class="rounded-md border border-gray-200 bg-white overflow-hidden shadow-sm">
-      <div class="w-full overflow-auto">
+    <div v-else class="bg-white">
+      <!-- Mobile view (Card Layout) -->
+      <div class="md:hidden flex flex-col gap-4">
+        <template v-if="loading">
+          <div v-for="i in 5" :key="i" class="p-4 border border-gray-200 rounded-lg space-y-3">
+            <Skeleton class="h-4 w-3/4" />
+            <Skeleton class="h-4 w-1/2" />
+            <div class="flex gap-2">
+              <Skeleton class="h-6 w-16" />
+              <Skeleton class="h-6 w-16" />
+            </div>
+          </div>
+        </template>
+        
+        <template v-else-if="publications.length > 0">
+          <div v-for="pub in publications" :key="pub.id" class="p-4 border border-gray-200 rounded-lg flex flex-col gap-3 shadow-sm relative transition-all">
+            <div class="absolute top-4 right-4">
+              <Badge v-if="pub.isApproved" variant="outline" class="bg-emerald-50 text-emerald-700 border-emerald-200">
+                Di-ACC
+              </Badge>
+              <Badge v-else variant="outline" class="bg-amber-50 text-amber-600 border-amber-200">
+                Menunggu
+              </Badge>
+            </div>
+            
+            <div class="pr-20">
+              <h3 class="font-semibold text-gray-900 text-base leading-snug line-clamp-2" :title="pub.title">
+                {{ pub.title }}
+              </h3>
+              <p class="text-sm text-gray-600 mt-1 truncate">{{ pub.author?.name }}</p>
+            </div>
+            
+            <div class="flex gap-2 items-center text-sm text-gray-500">
+              <Badge variant="secondary" class="bg-gray-100 text-gray-700 font-medium border-gray-200">{{ pub.type }}</Badge>
+              <span>•</span>
+              <span class="font-medium">{{ pub.year }}</span>
+            </div>
+            
+            <div class="flex items-center gap-2 mt-2 pt-3 border-t border-gray-100">
+              <Button 
+                v-if="authStore.user?.role === 'ADMIN'"
+                :variant="pub.isApproved ? 'outline' : 'default'" 
+                size="sm"
+                class="flex-1"
+                @click="requestApprovalToggle(pub.id, pub.isApproved)"
+              >
+                {{ pub.isApproved ? "Cabut ACC" : "ACC" }}
+              </Button>
+              
+              <Button variant="outline" size="sm" class="px-3" @click="openNewTab(`/repository/${pub.id}`)">
+                <PhEye class="h-4 w-4" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                class="px-3" 
+                :disabled="authStore.user?.role !== 'ADMIN'"
+                @click="authStore.user?.role === 'ADMIN' && router.push(`/dashboard/publications/${pub.id}/edit`)"
+              >
+                <PhPencilSimple class="h-4 w-4" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                class="px-3 border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50" 
+                :disabled="authStore.user?.role !== 'ADMIN'"
+                @click="authStore.user?.role === 'ADMIN' && requestDelete(pub.id)"
+              >
+                <PhTrash class="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </template>
+        
+        <template v-else>
+          <div class="p-8 text-center text-gray-500 border border-gray-200 rounded-lg bg-gray-50/50">
+            Belum ada dokumen yang diunggah.
+          </div>
+        </template>
+      </div>
+
+      <!-- Desktop view (Table) -->
+      <div class="hidden md:block w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-sm">
         <table class="w-full caption-bottom text-sm">
           <thead class="bg-gray-50 border-b border-gray-200">
             <tr class="transition-colors hover:bg-gray-100/50">

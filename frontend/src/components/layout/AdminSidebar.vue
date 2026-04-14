@@ -32,7 +32,7 @@
         v-for="item in sidebarNavItems"
         :key="item.href"
         :to="item.href"
-        class="flex flex-col lg:flex-row items-center justify-center lg:justify-start lg:gap-3 rounded-md p-1 lg:py-2.5 transition-all duration-200 group flex-1 lg:flex-none"
+        class="flex flex-col lg:flex-row items-center justify-center lg:justify-start lg:gap-3 rounded-md p-1 lg:py-2.5 transition-all duration-200 group flex-1 min-w-0 lg:flex-none"
         :class="[
            isCollapsed ? 'lg:px-0 lg:justify-center' : 'lg:px-4',
            isActive(item.href, route.path)
@@ -47,7 +47,7 @@
           :class="{ 'group-hover:scale-110': !isActive(item.href, route.path) }"
         />
         <span 
-           class="text-[10px] sm:text-xs lg:text-sm whitespace-nowrap overflow-hidden transition-all text-center"
+           class="text-[10px] sm:text-xs lg:text-sm truncate w-full transition-all text-center mt-0.5 lg:mt-0"
            :class="isCollapsed ? 'lg:hidden' : 'lg:inline'"
         >
           {{ item.title }}

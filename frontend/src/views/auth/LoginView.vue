@@ -43,7 +43,7 @@
           </Button>
         </form>
       </CardContent>
-      <CardFooter class="flex flex-col space-y-4 border-t px-6 py-4">
+      <CardFooter class="flex flex-col space-y-4 px-6 py-4">
         <div class="text-sm text-center text-gray-500 w-full">
           Belum punya akun?
           <router-link
