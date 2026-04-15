@@ -73,7 +73,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
-import { PhBookOpen } from '@phosphor-icons/vue'
 
 import Card from '../../components/ui/Card.vue'
 import CardHeader from '../../components/ui/CardHeader.vue'

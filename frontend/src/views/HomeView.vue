@@ -56,7 +56,7 @@
     </section>
 
     <!-- Stats Section with Hover Effects -->
-    <section class="w-full py-12 bg-gray-50/30 relative z-20">
+    <section class="w-full py-12 bg-gray-50/30 dark:bg-gray-900/50 relative z-20 transition-colors duration-300">
       <div class="container px-4 md:px-6 mx-auto">
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div v-for="(stat, i) in displayStats" :key="i" class="h-full transform transition-all hover:-translate-y-1">
@@ -78,18 +78,18 @@
     </section>
 
     <!-- Featured Collections Section -->
-    <section class="w-full py-20 bg-white relative">
-      <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-emerald-50/50 to-transparent pointer-events-none"></div>
+    <section class="w-full py-20 bg-white dark:bg-gray-950 relative transition-colors duration-300">
+      <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-emerald-50/50 dark:from-emerald-900/10 to-transparent pointer-events-none"></div>
       
       <div class="container px-4 md:px-6 mx-auto relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div class="space-y-2">
-            <div class="inline-flex items-center rounded-lg bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
+            <div class="inline-flex items-center rounded-lg bg-gray-100 dark:bg-gray-800 px-3 py-1 text-sm font-medium text-gray-800 dark:text-gray-200">
               <PhTrendUp weight="bold" class="mr-2 h-4 w-4 text-emerald-600" />
               Koleksi Pilihan
             </div>
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Temukan Berdasarkan Kategori</h2>
-            <p class="text-gray-500 max-w-2xl text-lg">
+            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl dark:text-gray-100">Temukan Berdasarkan Kategori</h2>
+            <p class="text-gray-500 dark:text-gray-400 max-w-2xl text-lg">
               Eksplorasi literatur berdasarkan tipe publikasi. Temukan referensi terbaik untuk riset Anda berikutnya.
             </p>
           </div>
@@ -106,14 +106,14 @@
             :to="cat.href" 
             class="block h-full group transform transition-all hover:scale-102 active:scale-95"
           >
-            <Card class="h-full hover:shadow-lg transition-all border-gray-200/50 bg-gradient-to-br from-white to-gray-50 overflow-hidden relative rounded-2xl">
+            <Card class="h-full hover:shadow-lg transition-all border-gray-200/50 dark:border-gray-800/50 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden relative rounded-2xl">
               <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <PhBookOpen class="h-24 w-24 -mr-8 -mt-8 rotate-12 text-gray-900" />
               </div>
               <CardHeader class="relative z-10">
                 <CardTitle class="text-xl group-hover:text-emerald-600 transition-colors">{{ cat.title }}</CardTitle>
-                <CardDescription class="text-base mt-2 flex items-center text-gray-600">
-                  <span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md font-medium mr-2">
+                <CardDescription class="text-base mt-2 flex items-center text-gray-600 dark:text-gray-400">
+                  <span class="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-md font-medium mr-2">
                     {{ cat.count }}
                   </span>
                   dokumen tersedia

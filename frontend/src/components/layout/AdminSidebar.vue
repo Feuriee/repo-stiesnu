@@ -1,11 +1,11 @@
 <template>
   <nav 
-    class="bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] lg:shadow-sm transition-all duration-300 relative z-40 lg:border-r lg:border-gray-200 lg:min-h-[calc(100vh-4rem)] lg:py-4 lg:flex lg:flex-col lg:space-y-2 fixed bottom-0 left-0 right-0 border-t border-gray-100 flex-row px-1 sm:px-2 flex justify-around lg:justify-start items-center lg:items-stretch h-16 lg:h-auto lg:static"
+    class="bg-white dark:bg-gray-900 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] lg:shadow-sm transition-all duration-300 relative z-40 lg:border-r lg:border-gray-200 dark:lg:border-gray-800 lg:min-h-[calc(100vh-4rem)] lg:py-4 lg:flex lg:flex-col lg:space-y-2 fixed bottom-0 left-0 right-0 border-t border-gray-100 dark:border-gray-800 flex-row px-1 sm:px-2 flex justify-around lg:justify-start items-center lg:items-stretch h-16 lg:h-auto lg:static"
     :class="[isCollapsed ? 'lg:w-20 lg:px-2' : 'lg:w-64 lg:px-4']"
   >
     <button 
       @click="toggleCollapse"
-      class="hidden lg:flex absolute -right-3 top-6 bg-white border border-gray-200 rounded-full p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 shadow-sm z-10 transition-colors"
+      class="hidden lg:flex absolute -right-3 top-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1.5 text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-700 shadow-sm z-10 transition-colors"
       title="Toggle Sidebar"
     >
       <component :is="isCollapsed ? PhCaretRight : PhCaretLeft" class="h-3.5 w-3.5" />
@@ -13,7 +13,7 @@
 
     <div class="hidden lg:block mb-6 mt-2 transition-all duration-300" :class="isCollapsed ? 'px-0 text-center' : 'px-4'">
       <h2 
-        class="font-bold tracking-tight text-emerald-700 transition-all duration-300 whitespace-nowrap overflow-hidden"
+        class="font-bold tracking-tight text-emerald-700 dark:text-emerald-500 transition-all duration-300 whitespace-nowrap overflow-hidden"
         :class="isCollapsed ? 'text-xs' : 'text-xl'"
       >
         <span v-if="!isCollapsed">Dashboard Panel</span>
@@ -21,7 +21,7 @@
       </h2>
       <p 
         v-if="!isCollapsed" 
-        class="text-sm text-gray-500 mt-1 capitalize whitespace-nowrap overflow-hidden text-ellipsis"
+        class="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize whitespace-nowrap overflow-hidden text-ellipsis"
       >
         {{ authStore.user?.role?.toLowerCase() || 'Pengguna' }}
       </p>
@@ -36,8 +36,8 @@
         :class="[
            isCollapsed ? 'lg:px-0 lg:justify-center' : 'lg:px-4',
            isActive(item.href, route.path)
-             ? 'text-emerald-600 lg:bg-emerald-600 lg:text-white lg:shadow-sm font-medium'
-             : 'text-gray-500 lg:text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 font-medium'
+             ? 'text-emerald-600 dark:text-emerald-400 lg:bg-emerald-600 dark:lg:bg-emerald-600 lg:text-white dark:lg:text-white lg:shadow-sm font-medium'
+             : 'text-gray-500 lg:text-gray-600 dark:text-gray-400 dark:lg:text-gray-400 hover:bg-emerald-50 dark:hover:bg-gray-800 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium'
          ]"
          :title="isCollapsed ? item.title : ''"
       >

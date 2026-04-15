@@ -1,5 +1,5 @@
 <template>
-  <p :class="['text-sm text-gray-500', className]">
+  <p :class="['text-sm text-gray-500 dark:text-gray-400', className]">
     <slot />
   </p>
 </template>

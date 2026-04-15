@@ -6,10 +6,10 @@
         :key="toast.id"
         class="pointer-events-auto relative flex w-full items-start space-x-4 overflow-hidden rounded-md border p-4 shadow-lg transition-all"
         :class="{
-          'bg-white border-gray-200 text-gray-900': toast.type === 'info',
-          'bg-emerald-50 border-emerald-200 text-emerald-900': toast.type === 'success',
-          'bg-red-50 border-red-200 text-red-900': toast.type === 'error',
-          'bg-yellow-50 border-yellow-200 text-yellow-900': toast.type === 'warning'
+          'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100': toast.type === 'info',
+          'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-100': toast.type === 'success',
+          'bg-red-50 dark:bg-red-950/50 border-red-200 dark:border-red-800 text-red-900 dark:text-red-100': toast.type === 'error',
+          'bg-yellow-50 dark:bg-yellow-950/50 border-yellow-200 dark:border-yellow-800 text-yellow-900 dark:text-yellow-100': toast.type === 'warning'
         }"
       >
         <div class="flex gap-3">

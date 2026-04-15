@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto px-4 py-8 max-w-6xl">
     <div class="mb-8 space-y-4">
-      <h1 class="text-3xl font-bold text-emerald-700">Koleksi Repository</h1>
-      <p class="text-gray-500">Telusuri seluruh karya ilmiah STIESNU Bengkulu</p>
+      <h1 class="text-3xl font-bold text-emerald-700 dark:text-emerald-500">Koleksi Repository</h1>
+      <p class="text-gray-500 dark:text-gray-400">Telusuri seluruh karya ilmiah STIESNU Bengkulu</p>
     </div>
 
     <div class="flex flex-col md:flex-row gap-6">
@@ -15,7 +15,7 @@
           <CardContent>
             <form @submit.prevent="updateSearch" class="space-y-4">
               <div class="space-y-2">
-                <label class="text-sm font-medium">Kata Kunci</label>
+                <label class="text-sm font-medium dark:text-gray-300">Kata Kunci</label>
                 <div class="relative">
                   <PhMagnifyingGlass class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
                   <Input 
@@ -27,7 +27,7 @@
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium">Jenis Karya</label>
+                <label class="text-sm font-medium dark:text-gray-300">Jenis Karya</label>
                 <Select v-model="filterType">
                   <option value="all">Semua Jenis</option>
                   <option value="Skripsi">Skripsi</option>
@@ -39,7 +39,7 @@
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium">Tahun</label>
+                <label class="text-sm font-medium dark:text-gray-300">Tahun</label>
                 <Input 
                   placeholder="Contoh: 2023" type="number" 
                   v-model="filterYear"
@@ -63,7 +63,7 @@
 
       <!-- Results -->
       <div class="flex-1 space-y-6">
-        <div class="flex justify-between items-center text-sm text-gray-500">
+        <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
           <span>Menampilkan {{ data.publications.length }} dari {{ data.total || 0 }} hasil</span>
         </div>
 
@@ -81,7 +81,7 @@
         </template>
         
         <template v-else-if="data.publications.length > 0">
-          <Card v-for="pub in data.publications" :key="pub.id" class="transition-all hover:bg-gray-50/50 mb-4 cursor-pointer" @click="router.push(`/repository/${pub.id}`)">
+          <Card v-for="pub in data.publications" :key="pub.id" class="transition-all hover:bg-gray-50/50 dark:hover:bg-gray-800/50 mb-4 cursor-pointer" @click="router.push(`/repository/${pub.id}`)">
             <CardContent class="p-6 !pt-6">
               <div class="flex flex-col gap-2">
                 <div class="flex gap-2 items-center mb-1">
@@ -89,9 +89,9 @@
                   <Badge v-if="pub.programStudy" variant="outline">{{ pub.programStudy }}</Badge>
                 </div>
                 
-                <h2 class="text-xl font-bold text-emerald-700 hover:underline inline-block">{{ pub.title }}</h2>
+                <h2 class="text-xl font-bold text-emerald-700 dark:text-emerald-500 hover:underline inline-block">{{ pub.title }}</h2>
                 
-                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mt-1">
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
                   <div class="flex items-center gap-1">
                     <PhUser class="h-4 w-4" />
                     <span class="hover:text-emerald-600" @click.stop="router.push(`/author/${pub.author.id}`)">
@@ -108,7 +108,7 @@
                   </div>
                 </div>
                 
-                <p class="text-sm mt-3 line-clamp-3 text-gray-500">
+                <p class="text-sm mt-3 line-clamp-3 text-gray-500 dark:text-gray-400">
                   {{ pub.abstract }}
                 </p>
               </div>
@@ -117,7 +117,7 @@
         </template>
         
         <template v-else>
-          <div class="text-center py-16 text-gray-500 bg-gray-50/50 rounded-lg">
+          <div class="text-center py-16 text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/30 rounded-lg">
             <PhBookOpen class="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>Tidak ada hasil yang ditemukan.</p>
           </div>

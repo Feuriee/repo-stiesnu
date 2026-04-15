@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-50 w-full border-b border-gray-200/40 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 shadow-sm transition-all duration-300">
+  <header class="sticky top-0 z-50 w-full border-b border-gray-200/40 dark:border-gray-800/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-900/60 shadow-sm transition-all duration-300">
     <div class="container flex h-16 items-center justify-between mx-auto px-4 md:px-8">
       <div class="flex items-center gap-2 sm:gap-4 min-w-0">
         <router-link to="/" class="flex items-center space-x-2 sm:space-x-3 group min-w-0">
@@ -19,7 +19,7 @@
       </div>
 
       <div class="flex items-center gap-3 sm:gap-4 shrink-0 pl-2">
-        <!-- Optional Theme Toggle here -->
+        <ThemeToggle />
         
         <div v-if="authStore.isAuthenticated && authStore.user" class="flex items-center gap-3">
           <Button 
@@ -43,10 +43,10 @@
         </div>
         
         <div v-else class="flex items-center gap-2">
-          <Button variant="ghost" size="sm" @click="router.push('/login')">
+          <Button variant="ghost" size="sm" @click="router.push('/login')" class="dark:text-gray-300 dark:hover:bg-gray-800">
             Masuk
           </Button>
-          <Button variant="default" size="sm" @click="router.push('/register')" class="hidden sm:inline-flex">
+          <Button variant="default" size="sm" @click="router.push('/register')" class="hidden sm:inline-flex dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-700">
             Daftar
           </Button>
         </div>
@@ -57,16 +57,16 @@
 
   <!-- Modal Konfirmasi Logout -->
   <div v-if="logoutAlertOpen" class="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-sm overflow-hidden animate-fade-in-up">
+    <div class="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-sm overflow-hidden animate-fade-in-up">
       <div class="p-6">
-        <h2 class="text-lg font-bold text-gray-900">Konfirmasi Keluar</h2>
-        <p class="text-gray-500 mt-2">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Konfirmasi Keluar</h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">
           Apakah Anda yakin ingin keluar dari akun Anda?
         </p>
       </div>
-      <div class="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3 border-t border-gray-100">
-        <Button variant="outline" @click="logoutAlertOpen = false">Batal</Button>
-        <Button class="bg-red-600 hover:bg-red-700 text-white" @click="handleLogoutConfirm">Ya, Keluar</Button>
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex items-center justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
+        <Button variant="outline" @click="logoutAlertOpen = false" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">Batal</Button>
+        <Button class="bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700" @click="handleLogoutConfirm">Ya, Keluar</Button>
       </div>
     </div>
   </div>
@@ -77,6 +77,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import Button from '../ui/Button.vue'
+import ThemeToggle from '../ui/ThemeToggle.vue'
 import { PhLayout, PhSignOut } from '@phosphor-icons/vue'
 
 const router = useRouter()
