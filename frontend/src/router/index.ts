@@ -77,7 +77,20 @@ const router = createRouter({
           meta: { requiresAuth: true }
         }
       ]
-    }
+    },
+    // ─── Error Pages ──────────────────────────────────────────────────────────
+    {
+      path: '/error',
+      name: 'server-error',
+      component: () => import('../views/errors/ServerErrorView.vue'),
+      // ?code=500 | 502 | 503
+    },
+    {
+      // Catch-all: harus paling bawah
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/errors/NotFoundView.vue'),
+    },
   ]
 })
 

@@ -1,4 +1,4 @@
-import express, { type Request, type Response } from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -47,6 +47,39 @@ app.post('/api/upload', upload.single('file'), (req: Request, res: Response): vo
     return;
   }
   res.json({ url: `/uploads/${req.file.filename}` });
+});
+
+// ─── 404 Handler ─────────────────────────────────────────────────────────────
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    status: 404,
+    error: 'Not Found',
+    message: `Route ${req.method} ${req.originalUrl} tidak ditemukan.`,
+  });
+});
+
+// ─── Global Error Handler (500 / 5xx) ────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+  console.error('[Global Error]', err);
+
+  const statusCode = (err as any).status ?? (err as any).statusCode ?? 500;
+  const statusText =
+    statusCode === 503
+      ? 'Service Unavailable'
+      : statusCode === 502
+        ? 'Bad Gateway'
+        : 'Internal Server Error';
+
+  res.status(statusCode).json({
+    status: statusCode,
+    error: statusText,
+    message:
+      process.env.NODE_ENV === 'production'
+        ? 'Terjadi kesalahan pada server. Silakan coba lagi nanti.'
+        : err.message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
+  });
 });
 
 app.listen(PORT, () => {
