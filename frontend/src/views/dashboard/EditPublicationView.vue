@@ -142,6 +142,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../../api/axios'
+import { useAuthStore } from '../../stores/auth'
 import { PhArrowLeft, PhUploadSimple } from '@phosphor-icons/vue'
 import { useToast } from '../../composables/useToast'
 
@@ -160,6 +161,7 @@ import Skeleton from '../../components/ui/Skeleton.vue'
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const authStore = useAuthStore()
 
 const pubId = route.params.id as string
 
@@ -182,11 +184,18 @@ const formData = ref({
 
 onMounted(async () => {
   try {
-    const response = await api.get('/publications?dashboard=true')
-    const publications = response.data.publications || response.data || []
-    const pub = publications.find((p: any) => p.id === pubId)
+    // Fetch langsung by ID agar tidak terpengaruh filter list
+    const response = await api.get(`/publications/${pubId}`)
+    const pub = response.data
     
     if (pub) {
+      // Validasi kepemilikan: non-admin hanya boleh edit karya miliknya
+      if (authStore.user?.role !== 'ADMIN' && pub.uploaderId !== authStore.user?.id) {
+        toast.error("Kamu tidak memiliki akses untuk mengedit karya ini.")
+        router.push("/dashboard/publications")
+        return
+      }
+
       formData.value = {
         title: pub.title || "",
         authorName: pub.author?.name || "",
@@ -202,9 +211,17 @@ onMounted(async () => {
       toast.error("Data tidak ditemukan")
       router.push("/dashboard/publications")
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error)
-    toast.error("Gagal mengambil data publikasi")
+    if (error.response?.status === 403) {
+      toast.error("Kamu tidak memiliki akses untuk mengedit karya ini.")
+      router.push("/dashboard/publications")
+    } else if (error.response?.status === 404) {
+      toast.error("Karya ilmiah tidak ditemukan.")
+      router.push("/dashboard/publications")
+    } else {
+      toast.error("Gagal mengambil data publikasi")
+    }
   } finally {
     fetching.value = false
   }

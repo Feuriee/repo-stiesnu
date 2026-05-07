@@ -41,25 +41,40 @@ export const getPublications = async (req: Request, res: Response): Promise<void
      
      const filters: any = {};
      
-     // 1. Determine base uploader filtering
-     // If fetched from standard user's dashboard, ONLY show their own works
+     // Track apakah query ini di-scope hanya untuk karya user sendiri
+     let isScopedToSelf = false;
+
+     // 1. Determine uploaderId filter
+     //    Prioritas: dashboard mode (pakai user.id dari token) > uploaderId eksplisit dari query
      if (dashboard === 'true' && user && user.role !== 'ADMIN') {
+        // Dashboard mode untuk non-admin: filter hanya karya milik user yang login
         filters.uploaderId = user.id;
-     } else if (uploaderId) {
+        isScopedToSelf = true;
+     } else if (uploaderId && String(uploaderId) !== 'undefined' && String(uploaderId) !== '') {
+        // uploaderId eksplisit dikirim dari frontend — selalu terapkan
         filters.uploaderId = String(uploaderId);
+        // Tandai sebagai "karya sendiri" jika uploaderId sama dengan user yang login
+        if (user && filters.uploaderId === user.id) {
+           isScopedToSelf = true;
+        } else if (!user) {
+           // Jika tidak ada user dari cookie tapi ada uploaderId eksplisit,
+           // asumsikan ini request dashboard — tandai sebagai scoped agar
+           // filter uploaderId tetap berlaku tanpa di-override isApproved
+           isScopedToSelf = true;
+        }
      }
      
      // 2. Determine approval visibility
-     // Only Admins can see ALL non-approved publications.
-     // Non-admins can only see non-approved publications if they are querying their own works specifically
+     // Admin dapat melihat semua (approved maupun tidak)
+     // Non-admin hanya dapat melihat karya yang belum approved jika itu karya mereka sendiri
      if (!user || user.role !== 'ADMIN') {
-        // If the query is scoped to this exact user's publications, they can see unapproved ones
-        if (filters.uploaderId !== user?.id) {
+        if (!isScopedToSelf) {
            filters.isApproved = true;
         }
      }
      
-     if (isApproved !== undefined) {
+     // Override isApproved filter jika ada query parameter eksplisit (hanya untuk admin)
+     if (isApproved !== undefined && user?.role === 'ADMIN') {
         filters.isApproved = isApproved === 'true';
      }
      

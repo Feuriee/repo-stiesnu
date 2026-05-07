@@ -2,8 +2,12 @@
   <div class="space-y-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Manajemen Karya Ilmiah</h1>
-        <p class="text-gray-500 mt-1">Kelola semua dokumen yang ada di reposituri.</p>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          {{ authStore.user?.role === 'ADMIN' ? 'Manajemen Karya Ilmiah' : 'Karya Ilmiah Saya' }}
+        </h1>
+        <p class="text-gray-500 mt-1">
+          {{ authStore.user?.role === 'ADMIN' ? 'Kelola semua dokumen yang ada di reposituri.' : 'Karya ilmiah yang telah kamu unggah ke repositori.' }}
+        </p>
       </div>
       <Button @click="router.push('/dashboard/publications/new')">
         <PhPlus class="mr-2 h-4 w-4" /> Tambah Baru
@@ -72,8 +76,7 @@
                 variant="outline" 
                 size="sm"
                 class="px-3" 
-                :disabled="authStore.user?.role !== 'ADMIN'"
-                @click="authStore.user?.role === 'ADMIN' && router.push(`/dashboard/publications/${pub.id}/edit`)"
+                @click="router.push(`/dashboard/publications/${pub.id}/edit`)"
               >
                 <PhPencilSimple class="h-4 w-4" />
               </Button>
@@ -82,8 +85,7 @@
                 variant="outline" 
                 size="sm"
                 class="px-3 border-red-200 text-red-500 hover:text-red-700 hover:bg-red-50" 
-                :disabled="authStore.user?.role !== 'ADMIN'"
-                @click="authStore.user?.role === 'ADMIN' && requestDelete(pub.id)"
+                @click="requestDelete(pub.id)"
               >
                 <PhTrash class="h-4 w-4" />
               </Button>
@@ -92,8 +94,15 @@
         </template>
         
         <template v-else>
-          <div class="p-8 text-center text-gray-500 border border-gray-200 rounded-lg bg-gray-50/50">
-            Belum ada dokumen yang diunggah.
+          <div class="empty-state-card">
+            <div class="empty-state-icon-wrap">
+              <PhUploadSimple class="empty-state-icon" />
+            </div>
+            <h3 class="empty-state-title">Ayo upload karya milikmu!</h3>
+            <p class="empty-state-desc">Belum ada karya ilmiah yang kamu unggah. Mulai bagikan hasil penelitianmu ke repositori STIESNU.</p>
+            <Button @click="router.push('/dashboard/publications/new')" class="empty-state-btn">
+              <PhPlus class="mr-2 h-4 w-4" /> Upload Sekarang
+            </Button>
           </div>
         </template>
       </div>
@@ -159,8 +168,7 @@
                   <Button 
                     variant="ghost" 
                     class="px-2" 
-                    :disabled="authStore.user?.role !== 'ADMIN'"
-                    @click="authStore.user?.role === 'ADMIN' && router.push(`/dashboard/publications/${pub.id}/edit`)"
+                    @click="router.push(`/dashboard/publications/${pub.id}/edit`)"
                   >
                     <PhPencilSimple class="h-4 w-4" />
                   </Button>
@@ -168,8 +176,7 @@
                   <Button 
                     variant="ghost" 
                     class="px-2 text-red-500 hover:text-red-700 hover:bg-red-50" 
-                    :disabled="authStore.user?.role !== 'ADMIN'"
-                    @click="authStore.user?.role === 'ADMIN' && requestDelete(pub.id)"
+                    @click="requestDelete(pub.id)"
                   >
                     <PhTrash class="h-4 w-4" />
                   </Button>
@@ -179,8 +186,17 @@
             
             <template v-else>
               <tr>
-                <td colspan="6" class="p-4 h-24 text-center align-middle text-gray-500">
-                  Belum ada dokumen yang diunggah.
+                <td colspan="6" class="p-4 align-middle">
+                  <div class="empty-state-card">
+                    <div class="empty-state-icon-wrap">
+                      <PhUploadSimple class="empty-state-icon" />
+                    </div>
+                    <h3 class="empty-state-title">Ayo upload karya milikmu!</h3>
+                    <p class="empty-state-desc">Belum ada karya ilmiah yang kamu unggah. Mulai bagikan hasil penelitianmu ke repositori STIESNU.</p>
+                    <Button @click="router.push('/dashboard/publications/new')" class="empty-state-btn">
+                      <PhPlus class="mr-2 h-4 w-4" /> Upload Sekarang
+                    </Button>
+                  </div>
                 </td>
               </tr>
             </template>
@@ -212,7 +228,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../stores/auth'
 import api from '../../api/axios'
-import { PhPlus, PhEye, PhPencilSimple, PhTrash } from '@phosphor-icons/vue'
+import { PhPlus, PhEye, PhPencilSimple, PhTrash, PhUploadSimple } from '@phosphor-icons/vue'
 import { useToast } from '../../composables/useToast'
 
 import Skeleton from '../../components/ui/Skeleton.vue'
@@ -234,8 +250,25 @@ const targetPub = ref<{ id: string; status: boolean; actionName: string; actionT
 
 onMounted(async () => {
   try {
-    const response = await api.get('/publications?dashboard=true')
-    publications.value = response.data.publications || response.data || []
+    // Untuk non-admin: sertakan uploaderId secara eksplisit agar filter pasti bekerja
+    const isAdmin = authStore.user?.role === 'ADMIN'
+    const userId = authStore.user?.id
+    const queryParams = isAdmin
+      ? '?dashboard=true'
+      : `?dashboard=true&uploaderId=${userId}`
+    
+    const response = await api.get(`/publications${queryParams}`)
+    let pubs = response.data.publications || response.data || []
+    
+    // Safety net client-side: untuk non-admin, pastikan hanya karya milik sendiri yang ditampilkan
+    // Ini mencegah bug jika backend filter gagal karena masalah cookie/session
+    if (!isAdmin && userId) {
+      pubs = pubs.filter((p: any) =>
+        p.uploaderId === userId || p.uploader?.id === userId
+      )
+    }
+    
+    publications.value = pubs
   } catch (err: any) {
     console.error(err)
     error.value = err.response?.data?.message || err.message || "Gagal mengambil data publikasi"
@@ -317,5 +350,74 @@ const handleActionConfirm = async () => {
 }
 .animate-fade-in-up {
   animation: fadeInUp 0.2s ease-out forwards;
+}
+
+/* Empty State */
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0fdf4 100%);
+  border-radius: 1rem;
+  border: 2px dashed #86efac;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.empty-state-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  margin-bottom: 1.25rem;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+  animation: pulse-green 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3); }
+  50% { box-shadow: 0 8px 32px rgba(34, 197, 94, 0.55); }
+}
+
+.empty-state-icon {
+  width: 36px;
+  height: 36px;
+  color: #ffffff;
+}
+
+.empty-state-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #15803d;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-desc {
+  font-size: 0.925rem;
+  color: #6b7280;
+  max-width: 360px;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.empty-state-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
 }
 </style>
